@@ -1,0 +1,68 @@
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-- استایل‌های اصلی -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'swiper/swiper.css' %}">
+
+    <!-- Dark Mode Script -->
+    <script type="text/javascript">
+        if (
+            localStorage.theme === "dark" ||
+            (!("theme" in localStorage) &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    </script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <!-- هدر -->
+    {% include "header.html" %}
+
+
+    <!-- محتوای اصلی -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- فوتر -->
+    {% include "footer.html" %}
+
+    <!-- اسکریپت‌ها -->
+    <script src="{% static 'scripts/app.js' %}"></script>
+
+
+     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+     <script>
+        // اسلایدر نسخه موبایل
+        const mobileSwiper = new Swiper('.MobileProductSlider', {
+            // فعال کردن pagination (نقطه‌های زیر اسلایدر)
+            pagination: {
+                el: '.MobileProductSlider-pagination',
+                clickable: true,
+            },
+        });
+
+        // اسلایدر نسخه دسکتاپ (داخل مودال)
+        const desktopSwiper = new Swiper('.ProductDetailsSlider', {
+            // فعال کردن دکمه‌های چپ و راست
+            navigation: {
+                nextEl: '.button-next-ProductDetailsSlider',
+                prevEl: '.button-prev-ProductDetailsSlider',
+            },
+        });
+     </script>
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %}
+
+{% endblock page_title %}
+
+{% block content %}
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قالب فروشگاهی کارین</title>
+  <link rel="stylesheet" href="static/css/app.css">
+  <link rel="stylesheet" href="node_modules/swiper/swiper-bundle.css">
+  <!-- ==========================  DARK MODE SCRIPT ============================= -->
+  <script type="text/javascript">
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  </script>
+</head>
+
+<body>
+  <section class="relative flex items-center justify-center min-h-screen w-full">
+    <!-- background -->
+    <div class="pointer-events-none absolute inset-0 flex w-screen items-center justify-center overflow-hidden [mask-image:radial-gradient(circle_at_center,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_85%)]">
+        <!-- SVG background content remains here -->
+    </div>
+
+    <div class="relative w-[27rem] mx-5 flex flex-col justify-center py-8 px-4 md:px-8 bg-white dark:bg-gray-800 shadow-md rounded-xl">
+        <div class="flex items-center justify-center">
+            <a href="/" class="flex flex-col text-center">
+              <span class="font-MorabbaMedium text-4xl flex items-center">
+                <span class="text-blue-500">کارین</span> شاپ
+              </span>
+            </a>
+        </div>
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            <p class="mb-2 text-gray-800 dark:text-gray-100 font-DanaMedium text-lg">کد تایید را وارد کنید</p>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-300">کد ۵ رقمی ارسال شده به شماره <span class="font-DanaMedium text-blue-500">{{ mobile }}</span> را وارد کنید.</p>
+
+            <!-- ** FIX 1: ADDED method="POST" to the form tag ** -->
+            <form id="otp-form" method="POST">
+                {% csrf_token %}
+
+                <!-- ** FIX 2: ADDED a place to display error messages ** -->
+                {% if form.errors %}
+                <div class="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+                    {% for field, error_list in form.errors.items %}
+                        {% for error in error_list %}
+                            {{ error }}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div dir="ltr" class="flex items-center justify-between gap-4 mt-5">
+                    <input type="text" class="otp-input" maxlength="1" />
+                    <input type="text" class="otp-input" maxlength="1" />
+                    <input type="text" class="otp-input" maxlength="1" />
+                    <input type="text" class="otp-input" maxlength="1" />
+                    <input type="text" class="otp-input" maxlength="1" />
+                </div>
+
+                <input type="hidden" name="code" id="hidden-otp-code">
+
+                <div class="w-full mx-auto mt-8">
+                    <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition">تایید و ورود</button>
+                </div>
+            </form>
+
+            <!-- Timer and resend button remain here -->
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript to combine inputs remains the same -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const otpForm = document.getElementById('otp-form');
+    const otpInputs = document.querySelectorAll('.otp-input');
+    const hiddenInput = document.getElementById('hidden-otp-code');
+
+    otpForm.addEventListener('submit', function(e) {
+        let otpCode = '';
+        otpInputs.forEach(input => {
+            otpCode += input.value;
+        });
+        hiddenInput.value = otpCode;
+    });
+
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('keyup', (e) => {
+            if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+    });
+});
+</script>
+
+</body>
+
+
+
+</html>
+
+{% endblock %}
