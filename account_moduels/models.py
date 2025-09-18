@@ -7,6 +7,9 @@ class User(AbstractUser):
     avatar = models.ImageField(max_length=120 , verbose_name= 'تصویر اواتار',null=True, blank=True)
     verification_code = models.CharField(max_length=5 , blank=True,null=True)
     mobile = models.CharField(max_length=200 , verbose_name='شماره تلفن')
+    address_org = models.TextField(null=True, blank=True, verbose_name='آدرس اصلی')
+    address2 = models.TextField(null=True, blank=True, verbose_name='آدرس دوم')
+    address3 = models.TextField(null=True, blank=True, verbose_name='آدرس سوم')
     groups = models.ManyToManyField(
 
         'auth.Group',
