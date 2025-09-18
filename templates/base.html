@@ -39,30 +39,116 @@
     {% include "footer.html" %}
 
     <!-- اسکریپت‌ها -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="{% static 'scripts/app.js' %}"></script>
+    <script src="{% static 'scripts/dashboard.js' %}"></script>
+    <script src="{% static 'scripts/productDetails.js' %}"></script>
+    <script src="{% static 'scripts/slider.js' %}"></script>
+    <script src="{% static 'scripts/alert.js' %}"></script>
+{#    <script src="{% static 'sweetalert/sweetalert.js' %}"></script>#}
+    <script src="{% static 'swiper/swiper.js' %}"></script>
 
 
-     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-     <script>
-        // اسلایدر نسخه موبایل
-        const mobileSwiper = new Swiper('.MobileProductSlider', {
-            // فعال کردن pagination (نقطه‌های زیر اسلایدر)
-            pagination: {
-                el: '.MobileProductSlider-pagination',
-                clickable: true,
-            },
-        });
 
-        // اسلایدر نسخه دسکتاپ (داخل مودال)
-        const desktopSwiper = new Swiper('.ProductDetailsSlider', {
-            // فعال کردن دکمه‌های چپ و راست
-            navigation: {
-                nextEl: '.button-next-ProductDetailsSlider',
-                prevEl: '.button-prev-ProductDetailsSlider',
-            },
-        });
-     </script>
 
+
+
+{% block exteraJS %}{% endblock %}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // پیدا کردن عناصر HTML
+        const form = document.getElementById('add-to-cart-form');
+        const quantityInput = document.getElementById('product_count');
+        const incrementBtn = document.querySelector('.increment');
+        const decrementBtn = document.querySelector('.decrement');
+        const totalDisplayElement = document.querySelector('.flex.items-center.justify-between.dark\\:bg-gray-900.dark\\:text-gray-400 p:last-child');
+
+        // تعریف قیمت پایه محصول
+        const basePrice = {{ product.price|floatformat:"0" }};
+
+        // تابع برای به‌روزرسانی قیمت کل
+        function updateTotalPrice() {
+            const count = parseInt(quantityInput.value, 10);
+            if (!isNaN(count) && count >= 1) {
+                const totalPrice = basePrice * count;
+                totalDisplayElement.textContent = totalPrice.toLocaleString() + ' تومان';
+            }
+        }
+
+        // اتصال دکمه افزایش
+        if (incrementBtn) {
+            incrementBtn.addEventListener('click', function() {
+                let currentValue = parseInt(quantityInput.value, 10);
+                if (isNaN(currentValue)) currentValue = 0;
+                const maxValue = parseInt(quantityInput.max, 10);
+                if (currentValue < maxValue) {
+                    quantityInput.value = currentValue + 1;
+                    updateTotalPrice();
+                }
+            });
+        }
+
+        // اتصال دکمه کاهش
+        if (decrementBtn) {
+            decrementBtn.addEventListener('click', function() {
+                let currentValue = parseInt(quantityInput.value, 10);
+                if (isNaN(currentValue)) currentValue = 2; // برای اطمینان از مقداردهی صحیح
+                const minValue = parseInt(quantityInput.min, 10);
+                if (currentValue > minValue) {
+                    quantityInput.value = currentValue - 1;
+                    updateTotalPrice();
+                }
+            });
+        }
+
+        // به‌روزرسانی قیمت در صورت تغییر مستقیم فیلد
+        if (quantityInput) {
+            quantityInput.addEventListener('change', updateTotalPrice);
+        }
+
+        // مدیریت ارسال فرم
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // جلوگیری از ارسال فرم به روش معمول
+
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        icon: data.icon,
+                        title: 'وضعیت عملیات',
+                        text: data.text,
+                        confirmButtonText: data.confirm_button_text
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'خطای سیستمی',
+                        text: 'خطایی در ارتباط با سرور رخ داده است.',
+                        confirmButtonText: 'چشم'
+                    });
+                });
+            });
+        }
+    });
+</script>
 </body>
 </html>

@@ -594,6 +594,64 @@ filterModalClose?.addEventListener('click'  , ()=> {
   filterModal.classList.remove('active')
 })
 
+document.addEventListener('DOMContentLoaded', function() {
+    const quantityInput = document.getElementById('product_count');
+    const incrementBtn = document.querySelector('.increment');
+    const decrementBtn = document.querySelector('.decrement');
+    const totalDisplay = document.querySelector('.flex.items-center.justify-between.dark\\:bg-gray-900 > p:last-child');
 
+    // از Django template برای گرفتن قیمت محصول استفاده می‌کنیم
+    // این کد رو در فایل HTML (نه JavaScript) قرار بده
+    // const basePrice = {{ product.price|floatformat:"0" }};
+
+
+    // تابع به‌روزرسانی قیمت
+    function updateTotalPrice() {
+        const count = parseInt(quantityInput.value, 10);
+        // اگر قیمت پایه محصول در دسترس بود
+        if (typeof basePrice !== 'undefined') {
+            const totalPrice = basePrice * count;
+            totalDisplay.textContent = totalPrice.toLocaleString() + ' تومان';
+        }
+    }
+
+    // اتصال دکمه افزایش
+    if (incrementBtn) {
+        incrementBtn.addEventListener('click', function() {
+            let currentValue = parseInt(quantityInput.value, 10);
+            if (isNaN(currentValue)) {
+                currentValue = 1;
+            }
+            const maxValue = parseInt(quantityInput.max, 10);
+            if (currentValue < maxValue) {
+                quantityInput.value = currentValue + 1;
+                updateTotalPrice();
+            }
+        });
+    }
+
+    // اتصال دکمه کاهش
+    if (decrementBtn) {
+        decrementBtn.addEventListener('click', function() {
+            let currentValue = parseInt(quantityInput.value, 10);
+            if (isNaN(currentValue)) {
+                currentValue = 1;
+            }
+            const minValue = parseInt(quantityInput.min, 10);
+            if (currentValue > minValue) {
+                quantityInput.value = currentValue - 1;
+                updateTotalPrice();
+            }
+        });
+    }
+
+    // به‌روزرسانی قیمت در صورت تغییر مستقیم فیلد
+    if (quantityInput) {
+        quantityInput.addEventListener('change', function() {
+            updateTotalPrice();
+        });
+    }
+
+});
 
 

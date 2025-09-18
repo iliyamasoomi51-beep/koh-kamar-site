@@ -9,12 +9,6 @@ from .models import User
 from django.utils.crypto import get_random_string
 
 
-# This function should be updated to send a real SMS
-def send_verification_code(mobile, code):
-    print(f"--- Sending verification code {code} to {mobile} ---")
-
-    pass
-
 
 class LoginOrRegisterView(View):
     def get(self, request):
@@ -51,7 +45,7 @@ class LoginOrRegisterView(View):
                         code = get_random_string(5, allowed_chars='0123456789')
                         user.verification_code = code
                         user.save()
-                        send_verification_code(mobile, code)
+                        # send_verification_code(mobile, code)
                         return redirect(reverse_lazy('verify_code_page'))
 
                     login(request, user)
@@ -80,7 +74,7 @@ class LoginOrRegisterView(View):
                 code = get_random_string(5, allowed_chars='0123456789')
                 user.verification_code = code
                 user.save()
-                send_verification_code(mobile, code)
+                # send_verification_code(mobile, code)
                 return redirect(reverse_lazy('verify_code_page'))
             context = {'form': form, 'step': 'register', 'mobile': mobile}
             return render(request, 'account_modules/login_or_register.html', context)
@@ -116,7 +110,7 @@ class VerifyCodeView(View):
 
                 user.save()
 
-                login(request, user)
+                login(request, user, backend="account_moduels.backends.MobileBackends")
 
                 # **CHANGE 4: Deleting the new session key**
                 if 'verification_mobile' in request.session:

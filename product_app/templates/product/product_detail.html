@@ -2,55 +2,11 @@
 
 {% block title %}
   {{ product.name }}
+    <script>
+    const basePrice = {{ product.price|floatformat:"0" }};
+</script>
 {% endblock %}
-{#<div class="product-detail-container">#}
-{##}
-{#  <div class="product-image">#}
-{#    {% if product.image %}#}
-{#      <img src="{{ product.image.url }}" alt="{{ product.name }}">#}
-{#    {% else %}#}
-{#      <img src="https://via.placeholder.com/500x500.png?text=No+Image" alt="{{ product.name }}">#}
-{#    {% endif %}#}
-{#  </div>#}
-{##}
-{#  <div class="product-info">#}
-{#    <h1>{{ product.name }}</h1>#}
-{##}
-{#    <a href="{{ product.category.get_absolute_url }}" class="category-link">{{ product.category }}</a>#}
-{##}
-{#    <p class="description">#}
-{#      {{ product.description|linebreaks }}#}
-{#    </p>#}
-{##}
-{#    <div class="price-stock-section">#}
-{#      <p class="price">{{ product.price }} تومان</p>#}
-{##}
-{#      {% if product.available %}#}
-{#        <p class="stock-status available">#}
-{#          موجود در انبار ({{ product.stock }} عدد)#}
-{#        </p>#}
-{#      {% else %}#}
-{#        <p class="stock-status unavailable">#}
-{#          ناموجود#}
-{#        </p>#}
-{#      {% endif %}#}
-{#    </div>#}
-{##}
-{#    {% if product.available %}#}
-{#      <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-to-cart-form">#}
-{#        {% csrf_token %}#}
-{##}
-{#        <label for="quantity">تعداد:</label>#}
-{#        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" id="quantity">#}
-{##}
-{#        <button type="submit" class="btn-add-to-cart">افزودن به سبد خرید</button>#}
-{#      </form>#}
-{#    {% else %}#}
-{#      <p>متاسفانه این محصول در حال حاضر موجود نیست.</p>#}
-{#    {% endif %}#}
-{#  </div>#}
-{##}
-{#</div>#}
+
 {% block content %}
 
     <main class="container">
@@ -122,9 +78,9 @@
                     <h1 class="font-DanaMedium text-lg">
                         تصاویر {{ product.name }}
                     </h1>
-                    <svg class="size-6 cursor-pointer close-sliderModal">
-                        <use href="#x-mark"></use>
-                    </svg>
+                  <button class="swiper-close-button">
+                           &times;
+                  </button>
                 </div>
 
                 <div class="swiper ProductDetailsSlider mt-14 px-10 w-96 relative">
@@ -141,17 +97,20 @@
                       {% endfor %}
                     </div>
                 </div>
-                <button class="slider-navigate_btn absolute right-40 top-[17rem] border dark:border-gray-700 border-gray-200 button-prev-ProductDetailsSlider z-20">
+                <button class="slider-navigate_btn absolute left-40 top-[17rem] border dark:border-gray-700 border-gray-200 button-prev-ProductDetailsSlider z-20">
                     <svg class="size-6 -rotate-90">
-                        <use href="#chevron" />
+
+                         <use href="arrow-left"></use>
+
                     </svg>
                 </button>
                 <button
-                    class="slider-navigate_btn absolute left-40 top-[17rem] border dark:border-gray-700 border-gray-200 button-next-ProductDetailsSlider z-10">
+                    class="slider-navigate_btn absolute right-40 top-[17rem] border dark:border-gray-700 border-gray-200 button-next-ProductDetailsSlider z-10">
                     <svg class="size-6 rotate-90">
-                        <use href="#chevron" />
+                       <use href="#arrow-right"></use>
                     </svg>
                 </button>
+
             </div>
             <div class="w-full md:w-3/4 flex flex-col gap-y-7">
                 <div class="flex items-center justify-between">
@@ -198,60 +157,52 @@
     </div>
     <div class="w-full lg:w-1/4 lg:sticky top-5 flex flex-col gap-y-6">
 
-{#        {% if product.available and product.stock > 0 %}#}
-{#        <form action="{% url 'cart:cart_add' product.id %}" method="post">#}
-{#            {% csrf_token %}#}
+
+
+        <form id="add-to-cart-form" method="post" action="{% url 'add_to_cart' %}">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+
             <div class="flex items-center gap-x-1">
                 <p class="text-2xl font-DanaDemiBold">{{ product.price|floatformat:"0" }}</p>
                 <p class="">تومان</p>
-            </div>
-{#            #}
-            <button
-                type="button"
-                class="w-full flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-2 px-3 mt-4">
+                   </div>
+
+            <button type="button" class="w-full flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-2 px-3 mt-4">
+
                 <svg class="w-6 h-6 increment text-green-600 cursor-pointer">
+
                     <use href="#plus"></use>
-                </svg>
-                <input type="number" name="quantity" id="customInput" min="1" max="{{ product.stock }}" value="1"
-                    class="custom-input mr-4 text-lg bg-transparent">
+                      </svg>
+              <input type="number" name="count" id="product_count" min="1" max="{{ product.stock }}" value="1"
+                  class="custom-input mr-4 text-lg bg-transparent">
+
                 <svg class="w-6 h-6 decrement text-red-500 cursor-pointer">
-                    <use href="#minus"></use>
-                </svg>
-            </button>
-{#    #}
+                    <use href="#minus"></use></svg></button>
             <div
-                class="w-full flex items-center gap-x-1 justify-between dark:bg-gray-900 dark:text-gray-400  bg-gray-100 transition-all rounded-lg py-2 px-2 xl:px-3 font-DanaMedium text-sm xl:text-base mt-4">
-                <p>مجموع خرید :</p>
-                <p>{{ product.price|floatformat:"0" }} تومان</p>
-{#                 این بخش باید با جاوا اسکریپت آپدیت شود #}
-            </div>
-{#    #}
+
+                    class="w-full flex items-center gap-x-1 justify-between dark:bg-gray-900 dark:text-gray-400 bg-gray-100 transition-all rounded-lg py-2 px-2 xl:px-3 font-DanaMedium text-sm xl:text-base mt-4">
+                 <p>مجموع خرید :</p>
+                 <p>{{ product.price|floatformat:"0" }} تومان</p>
+                    </div>
+
             <div class="relative overflow-hidden text-sm font-DanaDemiBold text-right mt-4">
-                {% if product.stock < 10 and product.stock > 0 %}
-                <p class="text-red-500">🔥 تنها {{ product.stock }} عدد در انبار باقیست!</p>
-                {% else %}
-                <p class="text-green-500">موجود در انبار</p>
-                {% endif %}
-            </div>
-{##}
-            <button
-                type="submit"
-                class="w-full flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2 mt-4">
-                افزودن به سبد
-                <svg class="w-5 h-5">
-                    <use href="#shopping-bag"></use>
-                </svg>
-{#            </button>#}
-{#        </form>#}
-{#        {% else %}#}
-{#            <div class="flex items-center gap-x-1">#}
-{#                <p class="text-2xl font-DanaDemiBold text-gray-400">{{ product.price|floatformat:"0" }}</p>#}
-{#                <p class="text-gray-400">تومان</p>#}
-{#            </div>#}
-{#            <div class="w-full text-center p-4 bg-red-100 dark:bg-red-900/50 text-red-500 rounded-lg">#}
-{#                <p>متاسفانه این محصول در حال حاضر موجود نیست.</p>#}
-{#            </div>#}
-{#        {% endif %}#}
+                        {% if product.stock < 10 and product.stock > 0 %}
+                        <p class="text-red-500">🔥 تنها {{ product.stock }} عدد در انبار باقیست!</p>
+                        {% else %}
+                        <p class="text-green-500">موجود در انبار</p>
+                        {% endif %}
+                    </div>
+
+
+            <button type="submit" class="w-full flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2 mt-4">
+
+                 افزودن به سبد
+
+                <svg class="w-5 h-5"></svg>
+                    </button>
+            </form>
+
 
         <div class="text-sm  text-gray-400 flex xl:items-center gap-x-1">
             <svg class="w-5 h-5">
@@ -318,31 +269,6 @@
                 </div>
 
                 <div class="w-full flex flex-col md:flex-row items-start gap-10">
-                    <!-- SUBMIT COMMENT -->
-{#                    <div class="lg:w-1/4 flex flex-col w-full ">#}
-{#                        <p class="font-DanaMedium text-lg mb-2">ثبت دیدگاه</p>#}
-{#                        <input type="text" placeholder="عنوان" class="tailwind-input">#}
-{#                        <p class="text-gray-500 dark:text-white text-sm mb-4">این محصول را به دیگران پیشنهاد : </p>#}
-{#                        <div class="grid grid-cols-12 child:col-span-6 gap-4 child:w-full  child:flex child:items-center child:justify-center child:gap-x-2 child:rounded-lg child:shadow child:py-2 mb-5 child:font-DanaMedium child:duration-300#}
-{#                            child:transition-all">#}
-{#                            <button#}
-{#                                class="text-green-600 ring-transparent ring-1 focus:ring-green-600 dark:ring-white/20 dark:focus:ring-green-600">#}
-{#                                <svg class="w-5 h-5">#}
-{#                                    <use href="#hand-up"></use>#}
-{#                                </svg>#}
-{#                                میکنم#}
-{#                            </button>#}
-{#                            <button#}
-{#                                class="text-red-500 ring-transparent ring-1 focus:ring-[#EF4343] dark:ring-white/20 dark:focus:ring-[#EF4343]">#}
-{#                                <svg class="w-5 h-5">#}
-{#                                    <use href="#hand-down"></use>#}
-{#                                </svg>#}
-{#                                نمیکنم#}
-{#                            </button>#}
-{#                        </div>#}
-{#                        <textarea class="h-24 tailwind-input" placeholder="متن دیدگاه"></textarea>#}
-{#                        <button class="rounded-lg p-2 bg-blue-500 hover:bg-blue-600 text-white transition-all">ثبت</button>#}
-{#                    </div>#}
 
                     <!-- ALL COMMENTS -->
                     <ul class="lg:w-3/4 flex flex-col gap-y-2 child:w-full ">
@@ -500,5 +426,47 @@
             </div>
         </section>
     </main>
+
+{% endblock %}
+{% block exteraJS %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+     <script>
+
+        const mobileSwiper = new Swiper('.MobileProductSlider', {
+
+            pagination: {
+                el: '.MobileProductSlider-pagination',
+                clickable: true,
+            },
+        });
+
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const desktopSwiper = new Swiper('.ProductDetailsSlider', {
+
+            navigation: {
+                nextEl: '.button-next-ProductDetailsSlider',
+                prevEl: '.button-prev-ProductDetailsSlider',
+            },
+        });
+        const closeButton = document.querySelector('.swiper-close-button');
+        const modal = document.querySelector('.product-modal');
+
+        if (closeButton && modal) {
+            closeButton.addEventListener('click', function() {
+
+                modal.classList.add('hidden');
+            });
+        }
+    });
+</script>
+     </script>
+
+
 
 {% endblock %}
