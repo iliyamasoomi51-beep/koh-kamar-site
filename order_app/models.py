@@ -16,19 +16,16 @@ class Order(models.Model):
         verbose_name = 'سبد خرید'
         verbose_name_plural = 'سبد های خرید کاربران'
 
+    # در فایل models.py
+    # در کلاس Order
     def calculate_total_price(self):
-        """
-        قیمت کل سبد خرید را با استفاده از Aggregation دیتابیس محاسبه می‌کند.
-        """
-        # از annotate برای اضافه کردن فیلد موقت 'item_price' (قیمت * تعداد) استفاده می‌کنیم
-        annotated_details = self.orderdetails_set.annotate(
-            item_price=F('final_price') * F('count')
-        )
-        # با استفاده از Sum، قیمت کل را به دست می‌آوریم
-        total = annotated_details.aggregate(total_price=Sum('item_price'))['total_price']
-
-        # اگر سبد خرید خالی بود، 0 را برمی‌گرداند
-        return total if total is not None else 0
+        total = 0
+        # به جای Aggregate، روی OrderDetailها حلقه می‌زنیم
+        for item in self.orderdetails_set.all():
+            # اگر final_price مقدار نداشت، از صفر استفاده کن
+            final_price = item.final_price if item.final_price is not None else 0
+            total += final_price * item.count
+        return total
 
     def decrease_product_stock(self):
         """
@@ -36,13 +33,12 @@ class Order(models.Model):
         """
         if self.is_paid:
             for detail in self.orderdetails_set.all():
-                # موجودی فعلی را با استفاده از F() به صورت اتمیک کم می‌کند
-                # این کار از بروز مشکلات در صورت پردازش همزمان چندین سفارش جلوگیری می‌کند
+
                 Product.objects.filter(id=detail.product.id).update(
                     stock=F('stock') - detail.count
                 )
         else:
-            # اگر سبد خرید نهایی نشده بود، پیامی نمایش می‌دهد
+
             print("Error: Cannot decrease stock for an unpaid order.")
 
 
@@ -58,3 +54,35 @@ class OrderDetail(models.Model):
     class Meta:
         verbose_name = 'جزئیات سبد خرید'
         verbose_name_plural = 'لیست جزئیات سبد خرید'
+
+
+
+
+# این مدل‌ها را به فایل models.py خود اضافه کنید
+
+class FinalOrder(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='کاربر')
+    # این فیلد به سبد خرید موقت (Order) که نهایی شده است، اشاره می‌کند
+    original_cart = models.OneToOneField(Order, on_delete=models.PROTECT, verbose_name='سبد خرید اصلی')
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='مبلغ نهایی')
+    payment_date = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ پرداخت')
+
+    def __str__(self):
+        return f"Final Order {self.id}"
+
+    class Meta:
+        verbose_name = 'سفارش نهایی'
+        verbose_name_plural = 'سفارشات نهایی'
+
+class FinalOrderDetail(models.Model):
+    final_order = models.ForeignKey(FinalOrder, on_delete=models.CASCADE, verbose_name='سفارش نهایی', related_name='final_order_details')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name='محصول')
+    price_at_purchase = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='قیمت در زمان خرید')
+    count = models.IntegerField(verbose_name='تعداد')
+
+    def __str__(self):
+        return str(self.product.name)
+
+    class Meta:
+        verbose_name = 'جزئیات سفارش نهایی'
+        verbose_name_plural = 'جزئیات سفارشات نهایی'
