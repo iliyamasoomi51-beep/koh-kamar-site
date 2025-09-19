@@ -8,7 +8,7 @@ from .models import Category, Product, ProductImage  # مدل جدید را impo
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug']
+    list_display = ['name', 'slug',]
     prepopulated_fields = {'slug': ('name',)}
 
 
@@ -20,7 +20,7 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'price', 'available', 'created']
+    list_display = ['name', 'slug', 'price', 'available', 'created','stock']
     list_filter = ['available', 'created']
     list_editable = ['price', 'available']
     prepopulated_fields = {'slug': ('name',)}

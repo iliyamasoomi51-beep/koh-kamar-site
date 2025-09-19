@@ -217,7 +217,7 @@
         <section class="relative mt-10 flex flex-col items-start gap-4 rounded-lg bg-white dark:bg-gray-800 shadow p-4">
             <div class="w-full py-3 flex items-center gap-x-6 child:font-DanaMedium tab-buttons z-10 border-b  border-gray-600/20 dark:border-b-gray-200/20">
               <button class="tab-btn text-blue-500" data-target="tab1" >معرفی محصول</button>
-              <button class="tab-btn text-gray-500 dark:text-gray-300" data-target="tab2">مشخصات</button>
+              <button class="tab-btn text-gray-500 dark:text-gray-300" data-target="tab2">توضیحات کامل</button>
               <button class="tab-btn text-gray-500 dark:text-gray-300" data-target="tab3">دیدگاه‌ها</button>
             </div>
             <div class="tab-content tab1 block">
@@ -232,24 +232,29 @@
                     </a>
                 </p>
             </div>
-            <div class="tab-content tab2 hidden w-full lg:w-[50%]">
-                <h2 class="font-DanaDemiBold border-b-2 border-blue-500 w-fit p-1 text-lg">مشخصات کلی
+            <div class="tab-content tab2 block">
+{#            <div class="tab-content tab2 hidden w-full lg:w-[50%]">#}
+                <h2 class="font-DanaDemiBold border-b-2 border-blue-500 w-fit p-1 text-lg">توضیحات کامل
                 </h2>
                 <div class="p-4 my-5 w-full mx-auto flex justify-center items-center gap-x-20">
-                    <ul class="space-y-3 text-gray-500 dark:text-gray-300 lg:w-2/4 child:pt-2">
-                        <li>مدل</li>
-                        <li>نمایشگر</li>
-                        <li>چیپست</li>
-                        <li>دوربین</li>
-                        <li>باتری</li>
-                    </ul>
-                    <ul class="space-y-3 text-gray-800 dark:text-gray-200 lg:w-2/4 divide-y divide-gray-200 dark:divide-gray-700 font-DanaMedium child:line-clamp-1">
-                        <li class="pt-2">آیفون ۱۶ پرو</li>
-                        <li class="pt-2">6.3 اینچ LTPO OLED، 120Hz</li>
-                        <li class="pt-2">Apple A18 Pro</li>
-                        <li class="pt-2">چهارگانه: 48 + 12 + 12 + TOF 3D</li>
-                        <li class="pt-2">باتری ۳۵۰۰ میلی‌آمپر با شارژ سریع</li>
-                    </ul>
+{#                    <ul class="space-y-3 text-gray-500 dark:text-gray-300 lg:w-2/4 child:pt-2">#}
+{#                        <li>مدل</li>#}
+{#                        <li>نمایشگر</li>#}
+{#                        <li>چیپست</li>#}
+{#                        <li>دوربین</li>#}
+{#                        <li>باتری</li>#}
+                     <p class="mt-4 leading-8">
+
+                        {{ product.name }} : {{ product.description }}
+                     </p>
+{#                    </ul>#}
+{#                    <ul class="space-y-3 text-gray-800 dark:text-gray-200 lg:w-2/4 divide-y divide-gray-200 dark:divide-gray-700 font-DanaMedium child:line-clamp-1">#}
+{#                        <li class="pt-2">آیفون ۱۶ پرو</li>#}
+{#                        <li class="pt-2">6.3 اینچ LTPO OLED، 120Hz</li>#}
+{#                        <li class="pt-2">Apple A18 Pro</li>#}
+{#                        <li class="pt-2">چهارگانه: 48 + 12 + 12 + TOF 3D</li>#}
+{#                        <li class="pt-2">باتری ۳۵۰۰ میلی‌آمپر با شارژ سریع</li>#}
+{#                    </ul>#}
                 </div>
                 <a href="#" class="flex gap-x-1 items-center text-blue-400">
                     مشاهده بیشتر

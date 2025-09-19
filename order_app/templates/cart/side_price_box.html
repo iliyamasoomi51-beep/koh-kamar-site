@@ -6,23 +6,15 @@
             <p>قیمت کالاها ({{ cart|length }})</p>
             <p class="flex gap-x-1 text-gray-600 dark:text-gray-300 ">{{ total_price|intcomma }}<span class="hidden xl:flex">تومان</span></p>
         </li>
-{#        <li>#}
-{#            <p>تخفیف </p>#}
-{#            <p class="font-DanaMedium text-red-500">۰ تومان</p>#}
-{#        </li>#}
         <li class="border-t-2 border-dashed border-gray-400 pt-8">
             <p> مبلغ نهایی :</p>
             <p class="font-DanaMedium text-xl">{{ total_price|intcomma }} تومان</p>
         </li>
     </ul>
 
-    <a
-{#            href="#{% url 'checkout' %}"#}
-        class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
+<a href="{% url 'checkout_page' %}">
+    <button type="button" class="mt-4 w-full bg-red-600 text-white p-3 rounded-lg font-DanaBold">
         تایید و تکمیل سفارش
-        <svg class="w-5 h-5">
-            <use href="#shopping-bag"></use>
-        </svg>
-    </a>
-
+    </button>
+</a>
 </div>

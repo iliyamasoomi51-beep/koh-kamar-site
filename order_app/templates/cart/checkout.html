@@ -4,11 +4,16 @@
 {% block page_title %}
 {{ User.full_name }}
 {% endblock page_title %}
-
 {% block content %}
 
-       <!-- ALL ICONS  -->
-    <svg class="hidden">
+ <svg class="hidden">
+        <symbol id="arrow-right" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </symbol>
+        <symbol id="sparkles" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+        </symbol>
+
         <symbol id="shield" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
         </symbol>
@@ -243,14 +248,27 @@
 
 
 <main class="container">
+    <!-- Breadcrumb -->
     <nav class="flex mt-8" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
             <li class="inline-flex items-center">
-                <a href="{% url 'home' %}" class="inline-flex items-center text-sm gap-x-1  text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                <a href="{% url 'home' %}"
+                    class="inline-flex items-center text-sm gap-x-1  text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     <svg class="size-4 mb-0.5">
-                        <use href="#home" />
+                        <use href="{% url "home" %}" />
                     </svg>
                     صفحه اصلی
+                </a>
+            </li>
+            <li class="inline-flex items-center">
+                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m1 9 4-4-4-4" />
+            </svg>
+                <a href="{% url 'cart_detail' %}"
+                    class="inline-flex items-center text-sm gap-x-1  text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                    سبد خرید
                 </a>
             </li>
             <li aria-current="page">
@@ -260,101 +278,120 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m1 9 4-4-4-4" />
                     </svg>
-                    <span class="ms-1 text-sm  text-gray-500 md:ms-2 dark:text-gray-400">سبد خرید</span>
+                    <span class="ms-1 text-sm  text-gray-500 md:ms-2 dark:text-gray-400">
+                        آدرس و ارسال
+                    </span>
                 </div>
             </li>
         </ol>
     </nav>
-
-    <section class="flex flex-col lg:flex-row justify-between items-start gap-4 child:rounded-lg child:bg-white child:dark:bg-gray-800 child:shadow child:p-4 mt-5">
-        <div class="w-full lg:w-3/4 flex flex-col gap-y-8 ">
-            <div class="flex items-center justify-between">
+    <section class="flex flex-col lg:flex-row justify-between items-start gap-4 mt-5">
+        <!-- Form -->
+        <div class="w-full lg:w-3/4 flex flex-col gap-y-4 child:rounded-lg child:bg-white child:dark:bg-gray-800 child:shadow child:p-4">
+            <!-- Address Form -->
+            <div class="w-full flex flex-col">
                 <span class="flex items-center gap-x-2">
-                    <h2 class="font-DanaMedium text-xl">سبد خرید</h2>
-                    <p class="text-gray-400">({{ cart|length }} کالا)</p>
+                    <a href="{% url 'cart_detail' %}">
+                        <svg class="size-5">
+                            <use href="#arrow-left"></use>
+                        </svg>
+                    </a>
+                    <p class="font-DanaDemiBold text-lg">آدرس ارسال</p>
                 </span>
-               <span class="flex items-center gap-x-1 text-red-600 dark:text-white cursor-pointer">
-    <a href="{% url 'clear_cart' %}" class="flex items-center gap-x-1 text-red-600 dark:text-white cursor-pointer">
-               <p class="mt-1 font-DanaMedium ">حذف همه</p>
-                 <svg class="w-5 h-5">
-                      <use href="#trash"></use>
-                           </svg>
-                                 </a>
-               </span>
+                <p class="text-gray-500 dark:text-gray-400 font-DanaMedium mt-4 mb-8 text-sm lg:text-base">
+                    لطفا اطلاعات خود را به درستی وارد نمایید
+                </p>
+                <div class="flex flex-col lg:flex-row items-start">
+                    <!-- فرم با استفاده از جنگو -->
+                    <form class="w-full grid grid-cols-12 gap-4" method="post" action="{% url 'update_address' %}">
+                        {% csrf_token %}
+                        {% if user_info.address_org %}
+                            <div class="col-span-12">
+                                <p class="text-gray-700 dark:text-gray-300 font-DanaMedium">{{ user_info.address_org }}</p>
+                                <p class="mt-2 text-sm text-gray-500">این آدرس به عنوان آدرس پیش‌فرض شما انتخاب شده است. برای تغییر آن، لطفاً به پروفایل خود مراجعه کنید.</p>
+                            </div>
+                        {% else %}
+                            <p class="col-span-12 font-DanaMedium text-gray-700 dark:text-gray-300">لطفا آدرس اصلی خود را وارد کنید:</p>
+
+                            <div class="col-span-12 flex flex-col gap-y-4">
+                                {{ address_form.as_p }}
+                            </div>
+                            <button type="submit" class="col-span-12 mt-4 flex-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
+                             ذخیره آدرس
+                        </button>
+                        {% endif %}
+
+                    </form>
+                </div>
             </div>
 
-            <div class="w-full flex flex-col gap-y-4 child:p-2 lg:child:p-4 ">
-                {% if cart %}
+            <!-- خلاصه سفارش -->
+            <div>
+                <h1 class="font-DanaDemiBold text-lg">خلاصه سفارش</h1>
+                <div class="flex flex-col gap-y-4 mt-8">
                     {% for item in cart %}
-                    <div class="w-full flex justify-between relative border-b-2 border-gray-200 dark:border-white/20 ">
-                        <div class="flex flex-col sm:flex-row items-center gap-6">
-                            <div class="flex w-fit flex-col">
-{#                                     <div class="col-span-4 w-24 h-20">
-    {% if item.product.image %}
-        <img src="{{ item.product.image.url }}" class="w-36" alt="{{ item.product.name }}">
-    {% else %}
-        <img src="{% static 'images/placeholder.webp' %}" class="w-36" alt="{{ item.product.name }}">
-    {% endif %}
-</div>
-
-                                <div class="flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-1 px-2">
-                                    <a href="{% url 'add_to_cart' item.product.id %}" class="flex items-center justify-center w-5 h-5 text-green-600">
-                                        <svg class="w-4 h-4">
-                                            <use href="#plus"></use>
-                                        </svg>
-                                    </a>
-                                    <input type="number" min="1" max="20" value="{{ item.count }}"
-                                        class="custom-input mr-8 text-lg bg-transparent text-center" readonly>
-                                    <a href="{% url 'remove_from_cart' item.product.id %}" class="flex items-center justify-center w-5 h-5 text-red-500">
-                                        <svg class="w-4 h-4">
-                                            <use href="#minus"></use>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="flex flex-col gap-y-4">
-                                <h2 class="font-DanaMedium line-clamp-1">
-                                    {{ item.product.name }}
-                                </h2>
-                                <ul class="space-y-3 child:text-sm text-gray-400 child:flex child:items-center child:gap-x-1.5">
-                                    <li>
-                                        <p class="mt-1">گارانتی 18 ماهه</p>
-                                    </li>
-                                    <li>
-                                        <p class="mt-1">ارسال 1 روز کاری</p>
-                                    </li>
-                                </ul>
-                                <span class="flex items-center gap-x-1 text-gray-700 dark:text-gray-300 font-DanaMedium mt-4">
-                                    <p class="font-DanaMedium text-xl">{{ item.product.price|intcomma }}</p>
-                                    <p class="text-lg">تومان</p>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="hidden sm:flex items-end justify-between flex-col">
-                            <a href="{% url 'remove_from_cart' item.product.id %}">
-                                <svg class="w-5 h-5 cursor-pointer">
-                                    <use href="#x-mark"></use>
-                                </svg>
-                            </a>
+                    <div class="flex items-center gap-x-4">
+                        <img src="{{ item.product.image.url }}" class="w-20 h-20 rounded-lg" alt="{{ item.product.name }}">
+                        <div class="flex flex-col items-start gap-y-2 font-DanaMedium text-gray-600 dark:text-gray-200">
+                            <p class="text-sm font-DanaDemiBold">{{ item.product.name }}</p>
+                            <p class="text-xs text-gray-500">تعداد: {{ item.count }}</p>
+                            <p class="text-sm">مبلغ: {{ item.final_price|intcomma }} تومان</p>
                         </div>
                     </div>
                     {% endfor %}
-                {% else %}
-                    <div class="text-center font-DanaMedium text-gray-500 py-10">
-                        <p>سبد خرید شما خالی است.</p>
-                        <a href="{% url 'product:product_list' %}" class="text-blue-500 hover:underline">بازگشت به فروشگاه</a>
-                    </div>
-                {% endif %}
+                </div>
+            </div>
+
+            <!-- نوع ارسال -->
+            <div>
+                <span class="flex items-center gap-x-1">
+                    <svg class="size-5 mb-1">
+                        <use href="#truck"></use>
+                    </svg>
+                    <h1 class="font-DanaDemiBold">نوع ارسال</h1>
+                </span>
+                <div class="grid grid-cols-12 child:col-span-12 gap-2 mt-4 child:w-full child:flex child:items-center child:gap-x-2 child:rounded-lg child:p-3 child:duration-300 child:border child:border-gray-300 child:dark:border-gray-300/20 child:transition-all child:text-gray-600 child:dark:text-gray-300 child:font-DanaMedium child:text-base">
+                    <!-- دکمه‌های نوع ارسال (اینها ثابت هستند و نیازی به تغییر ندارند) -->
+                    <button class=" group ring-transparent ring-1 focus:ring-blue-500 dark:ring-white/20 dark:focus:ring-blue-400">
+                        <span class="w-4 h-4 border border-gray-400 rounded-full group-focus:bg-blue-400 group-focus:border-blue-500 duration-300 transition-all"></span>
+                        پست پیشتاز : 70,000 تومان
+                    </button>
+                    <button class="group ring-transparent ring-1 focus:ring-blue-500 dark:ring-white/20 dark:focus:ring-blue-400">
+                        <span class="w-4 h-4 border border-gray-400 rounded-full group-focus:bg-blue-400 group-focus:border-blue-500 duration-300 transition-all"></span>
+                        پست معمولی : 20,000 تومان
+                    </button>
+                </div>
             </div>
         </div>
 
-        {% include 'cart/side_price_box.html' %}
+        <!-- PRICE BOX -->
+        <div class="w-full lg:w-1/4 lg:sticky top-5 flex flex-col gap-y-4 rounded-lg bg-white dark:bg-gray-800 shadow p-4">
+            <!-- PRICE -->
+            <ul class="child:flex child:items-center child:justify-between space-y-8">
+                <li>
+                    <p>قیمت کالاها</p>
+                    <p class="flex gap-x-1 text-gray-600 dark:text-gray-300 ">{{ total_price|intcomma }} <span class="hidden xl:flex">تومان</span></p>
+                </li>
+                <li class="text-red-500 dark:text-red-400">
+                    <p>تخفیف </p>
+                    <p class="font-DanaMedium">۰ تومان</p>
+                </li>
+                <li class="border-t-2 border-dashed border-gray-400 pt-8">
+                    <p> مبلغ نهایی :</p>
+                    <p class="font-DanaMedium text-xl">{{ total_price|intcomma }} تومان</p>
+                </li>
+            </ul>
+
+            <a href="{% url 'request_payment' %}"
+                class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
+                تایید و تکمیل سفارش
+                <svg class="w-5 h-5">
+                    <use href="#shopping-bag"></use>
+                </svg>
+            </a>
+        </div>
     </section>
-{{ total_price }}
 </main>
 
-
-
-
-
 {% endblock %}
+
